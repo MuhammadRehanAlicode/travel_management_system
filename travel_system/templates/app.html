@@ -1,0 +1,61 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} · Logistics</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="bg-slate-50 text-slate-800">
+<div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
+<aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-slate-200 z-40 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
+  <div class="flex items-center gap-2 px-4 h-16 border-b border-slate-100 shrink-0">
+    <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold">L</div>
+    <div id="companyName" class="font-semibold text-sm leading-tight truncate">Logistics</div>
+  </div>
+  <nav id="nav" class="flex-1 overflow-y-auto p-3 space-y-0.5 text-sm"></nav>
+  <div class="relative border-t border-slate-100 p-3 shrink-0">
+    <div id="userMenu" class="hidden absolute bottom-16 left-3 right-3 bg-white border border-slate-200 rounded-xl shadow-lg p-2 text-sm">
+      <div class="px-3 py-2"><div id="uName" class="font-medium"></div><div id="uMail" class="text-xs text-slate-500"></div></div>
+      <a href="/settings/" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Settings</a>
+      <a href="/company-settings/" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Company settings</a>
+      <button id="logout" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100 text-red-600">Log out</button>
+    </div>
+    <button id="userBtn" class="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-100 text-sm">
+      <span id="uInit" class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-semibold">A</span>
+      <span id="uBtnName" class="flex-1 text-left truncate">Admin</span><span class="text-slate-400">⌃</span>
+    </button>
+  </div>
+</aside>
+
+<div class="lg:pl-64 min-h-screen flex flex-col">
+  <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200 h-14 flex items-center gap-3 px-4">
+    <button id="menuBtn" class="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100" aria-label="Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="text-sm text-slate-500"><a href="/dashboard/" class="hover:underline">Dashboard</a>
+      {% if module != "dashboard" %}<span class="mx-1">/</span><span class="text-slate-800 font-medium">{{ title }}</span>{% endif %}</div>
+  </header>
+  <main id="app" class="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto"></main>
+</div>
+
+<div id="modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
+  <div class="bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-2xl max-h-[92vh] flex flex-col shadow-xl">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <h2 id="modalTitle" class="font-semibold text-lg"></h2>
+      <button id="modalClose" class="p-1 text-slate-500 hover:text-slate-900 text-2xl leading-none" aria-label="Close">&times;</button>
+    </div>
+    <div id="modalBody" class="p-5 overflow-y-auto"></div>
+  </div>
+</div>
+<div id="toasts" class="fixed top-4 right-4 left-4 sm:left-auto z-[60] space-y-2 pointer-events-none"></div>
+
+<script>window.MODULE = "{{ module }}";</script>
+<script src="{% static 'js/core.js' %}"></script>
+<script src="{% static 'js/modules.js' %}"></script>
+<script src="{% static 'js/pages.js' %}"></script>
+</body>
+</html>

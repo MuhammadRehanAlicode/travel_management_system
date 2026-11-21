@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-slate-200 p-6 sm:p-8">
+    <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl font-bold mb-4">L</div>
+    <h1 class="text-2xl font-bold text-slate-900">Welcome back</h1>
+    <p class="text-sm text-slate-500 mb-6">Sign in to the logistics management system.</p>
+    <form id="f" class="space-y-4">
+      <div><label class="block text-sm font-medium mb-1">Username</label>
+        <input id="u" required autocomplete="username" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"></div>
+      <div><label class="block text-sm font-medium mb-1">Password</label>
+        <input id="p" type="password" required autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"></div>
+      <p id="err" class="text-sm text-red-600 hidden"></p>
+      <button class="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-lg py-2.5 font-medium">Sign in</button>
+    </form>
+  </div>
+<script>
+function csrf(){return (document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||""}
+fetch("/api/auth/me/").catch(()=>{});
+document.getElementById("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = document.getElementById("err"); err.classList.add("hidden");
+  // make sure we have a CSRF cookie
+  if(!csrf()) await fetch("/login/");
+  const r = await fetch("/api/auth/login/", {method:"POST", headers:{"Content-Type":"application/json","X-CSRFToken":csrf()},
+    body: JSON.stringify({username:u.value, password:p.value})});
+  if(r.ok){ const n = new URLSearchParams(location.search).get("next"); location.href = n && n.startsWith("/") ? n : "/dashboard/"; }
+  else { const d = await r.json().catch(()=>({})); err.textContent = d.detail || "Sign in failed."; err.classList.remove("hidden"); }
+});
+</script>
+</body>
+</html>
